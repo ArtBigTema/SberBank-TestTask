@@ -43,4 +43,12 @@ public class Currency {
     @Element(name = "Value")
     @DBColumn(name = "Value", type = DBColumnType.TEXT)
     private String value;
+
+    public Double getValue() {
+        return Double.parseDouble(value.replace(',', '.'));
+    }
+
+    public Integer getNominal() {
+        return nominal;
+    }
 }

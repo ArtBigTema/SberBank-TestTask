@@ -1,15 +1,21 @@
 package av.sberbank;
 
+import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import av.sberbank.utils.NetworkUtils;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+import av.sberbank.model.Currency;
+import av.sberbank.utils.NetworkUtils;
+import av.sberbank.view.CurrenciesView;
+
+public class MainActivity extends AppCompatActivity
+        implements CurrenciesView {
 
     private Button btnStartCurr;
     private Button btnEndCurr;
@@ -68,4 +74,19 @@ public class MainActivity extends AppCompatActivity {
             // show list curr
         }
     };
+
+    @Override
+    public void showListCurrencies(List<Currency> currencies) {
+
+    }
+
+    @Override
+    public void endCalculate(double endSum) {
+
+    }
+
+    @Override
+    public Context getContextPresenter() {
+        return this;
+    }
 }

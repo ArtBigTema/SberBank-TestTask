@@ -66,7 +66,7 @@ public class InternetService extends Service {
     }
 
     public class DataBinder extends Binder {
-        public InternetService getDataService() {
+        public InternetService getInternetService() {
             return InternetService.this;
         }
     }
