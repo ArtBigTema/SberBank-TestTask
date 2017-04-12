@@ -53,7 +53,8 @@
             android:layout_alignStart="@+id/button_start_curr"
             android:layout_below="@+id/button_start_curr"
             android:layout_marginTop="@dimen/margin"
-            android:inputType="phone" />
+            android:inputType="phone"
+            android:text="@string/currency_sum" />
 
         <EditText
             android:id="@+id/edittext_end_curr"
@@ -64,7 +65,8 @@
             android:layout_alignRight="@+id/button_end_curr"
             android:layout_alignStart="@+id/button_end_curr"
             android:layout_alignTop="@+id/edittext_start_curr"
-            android:inputType="phone" />
+            android:inputType="phone"
+            android:text="@string/currency_sum" />
 
         <Button
             android:id="@+id/button_clear_et"

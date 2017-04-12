@@ -51,4 +51,22 @@ public class Currency {
     public Integer getNominal() {
         return nominal;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCharCode() {
+        return charCode;
+    }
+
+    public String getCharCodePlusName(){
+        StringBuilder sb = new StringBuilder();
+        sb.append('[');
+        sb.append(getCharCode());
+        sb.append(']');
+        sb.append(' ');
+        sb.append(getName());
+        return sb.toString();
+    }
 }

@@ -42,7 +42,7 @@ public class PresenterImpl implements Presenter {
     }
 
     @Override
-    public void onViewCreated() {
+    public void refreshData() {
         model.requestCurrencies();
     }
 }

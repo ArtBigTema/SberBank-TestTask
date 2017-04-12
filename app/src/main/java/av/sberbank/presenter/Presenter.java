@@ -9,5 +9,5 @@ import av.sberbank.model.Currency;
 public interface Presenter {
     void onResultButtonClick(double startSum, Currency startCurrency, Currency endCurrency);
 
-    void onViewCreated();
+    void refreshData();
 }
