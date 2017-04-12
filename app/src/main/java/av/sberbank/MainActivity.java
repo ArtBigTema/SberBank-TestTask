@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onClick(View v) {
             ClipboardManager clipMan = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            clipMan.setPrimaryClip(ClipData.newPlainText(Constants.NAME, etEndCurr.getText()));
+            clipMan.setPrimaryClip(ClipData.newPlainText(Constants.CLIP_LABEL, etEndCurr.getText()));
             Snackbar.make(v, R.string.toast_click_to_copy, Snackbar.LENGTH_SHORT).show();
         }
     };

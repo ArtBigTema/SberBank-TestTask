@@ -41,7 +41,7 @@ public class CurrencyAdapter extends ArrayAdapter<Currency> {
         return view;
     }
 
-    public Currency getSelectedItem(){
+    public Currency getSelectedItem() {
         return getItem(currentCurrencyPosition);
     }
 

@@ -7,8 +7,8 @@ package av.sberbank.utils;
 public class Constants {
     public static final String CBR_URL = "http://www.cbr.ru/scripts/XML_daily.asp";
     public static final int TIMEOUT = 4 * 1000;
-    public static final int DURATION = 300;
 
-    public static final String CHAR_CODE= "RUB";
-    public static final String NAME= "Российский рубль";
+    public static final String CHAR_CODE = "RUB";
+    public static final String NAME = "Российский рубль";
+    public static final String CLIP_LABEL = "text";
 }
