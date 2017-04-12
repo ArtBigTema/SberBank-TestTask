@@ -56,6 +56,8 @@ public abstract class FromInternet implements Request {
         try {
             Serializer serializer = new Persister();
             Currencies currencies = serializer.read(Currencies.class, inputStream);
+            currencies.addRuble(); // ZZ
+
             notifyDataAccepted(currencies.getCurrencies());
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);

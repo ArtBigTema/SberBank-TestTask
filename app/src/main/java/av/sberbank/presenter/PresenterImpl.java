@@ -34,7 +34,7 @@ public class PresenterImpl implements Presenter {
     }
 
     @Override
-    public void onResultButtonClick(double sum, Currency startCurrency, Currency endCurrency) {
+    public void calculate(double sum, Currency startCurrency, Currency endCurrency) {
         double startValue = startCurrency.getValue() / startCurrency.getNominal();
         double endValue = endCurrency.getValue() / endCurrency.getNominal();
         double result = sum * (startValue / endValue);

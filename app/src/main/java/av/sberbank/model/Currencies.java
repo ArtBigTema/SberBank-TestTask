@@ -25,4 +25,8 @@ public class Currencies {
     public List<Currency> getCurrencies() {
         return currencies;
     }
+
+    public void addRuble() {
+        currencies.add(0, Currency.getRuble());
+    }
 }

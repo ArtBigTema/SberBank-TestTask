@@ -8,6 +8,8 @@ import android.provider.Settings;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -67,12 +69,13 @@ public class MainActivity extends AppCompatActivity
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
 
         mSwipeRefreshLayout.setOnRefreshListener(refreshListener);
-
         btnStartCurr.setOnClickListener(startCurrClickListener);
         btnEndCurr.setOnClickListener(endCurrClickListener);
         btnReverseCurr.setOnClickListener(clickReverse);
         btnClearCurr.setOnClickListener(clickClear);
         btnClearCurr.setOnClickListener(clickClear);
+
+        etStartCurr.addTextChangedListener(watcherStartCurr);
     }
 
     private final SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
@@ -98,27 +101,17 @@ public class MainActivity extends AppCompatActivity
         public void onClick(View v) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
 
-            dialogBuilder.setSingleChoiceItems(adapterStartCurr,
-                    adapterStartCurr.getCurrentCurrencyPosition(),
+            dialogBuilder.setAdapter(adapterStartCurr,
                     new DialogInterface.OnClickListener() {
 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             adapterStartCurr.updateSelected(which);
-                        }
-
-                    });
-
-            dialogBuilder.setPositiveButton(android.R.string.ok,
-                    new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
                             btnStartCurr.setText(adapterStartCurr.getSelectedItem().getCharCode());
-                            dialog.cancel();
+                            calculate();
                         }
-
                     });
+
             dialogBuilder.show();
         }
     };
@@ -128,27 +121,18 @@ public class MainActivity extends AppCompatActivity
         public void onClick(View v) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
 
-            dialogBuilder.setSingleChoiceItems(adapterEndCurr,
-                    adapterEndCurr.getCurrentCurrencyPosition(),
+            dialogBuilder.setAdapter(adapterEndCurr,
                     new DialogInterface.OnClickListener() {
 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             adapterEndCurr.updateSelected(which);
-                        }
-
-                    });
-
-            dialogBuilder.setPositiveButton(android.R.string.ok,
-                    new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
                             btnEndCurr.setText(adapterEndCurr.getSelectedItem().getCharCode());
-                            dialog.cancel();
+                            calculate();
                         }
 
                     });
+
             dialogBuilder.show();
         }
     };
@@ -162,8 +146,36 @@ public class MainActivity extends AppCompatActivity
 
             btnEndCurr.setText(adapterEndCurr.getSelectedItem().getCharCode());
             btnStartCurr.setText(adapterStartCurr.getSelectedItem().getCharCode());
+
+            calculate();
         }
     };
+
+    private final TextWatcher watcherStartCurr = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            calculate();
+        }
+    };
+
+    private void calculate() {
+        if (etStartCurr.getText().length() < 1) {
+            etEndCurr.setText("");
+            return;
+        }
+        double startSum = Double.parseDouble(etStartCurr.getText().toString());
+        Currency startCurrency = adapterStartCurr.getSelectedItem();
+        Currency endCurrency = adapterEndCurr.getSelectedItem();
+        presenter.calculate(startSum, startCurrency, endCurrency);
+    }
 
     private final View.OnClickListener clickClear = new View.OnClickListener() {
         @Override
@@ -183,11 +195,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void resetView() {
-        adapterStartCurr.setCurrentCurrencyPosition(0);
-        adapterEndCurr.setCurrentCurrencyPosition(0);
+        adapterStartCurr.setCurrentCurrencyPosition(0);//fixme 0
+        adapterEndCurr.setCurrentCurrencyPosition(0);//fixme 0
 
+        btnStartCurr.setText(adapterStartCurr.getSelectedItem().getCharCode());
         btnEndCurr.setText(adapterEndCurr.getSelectedItem().getCharCode());
-        btnStartCurr.setText(adapterEndCurr.getSelectedItem().getCharCode());
 
         etStartCurr.setText(R.string.currency_sum);
         etEndCurr.setText(R.string.currency_sum);
@@ -195,7 +207,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void endCalculate(double endSum) {
-
+        etEndCurr.setText(String.valueOf(endSum));
     }
 
     @Override

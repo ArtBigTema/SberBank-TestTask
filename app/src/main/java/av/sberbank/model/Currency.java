@@ -8,6 +8,7 @@ import av.sberbank.model.db.DBColumn;
 import av.sberbank.model.db.DBColumnType;
 import av.sberbank.model.db.DBTable;
 import av.sberbank.model.db.Key;
+import av.sberbank.utils.Constant;
 
 /**
  * Created by Artem on 12.04.2017.
@@ -60,7 +61,7 @@ public class Currency {
         return charCode;
     }
 
-    public String getCharCodePlusName(){
+    public String getCharCodePlusName() {
         StringBuilder sb = new StringBuilder();
         sb.append('[');
         sb.append(getCharCode());
@@ -68,5 +69,18 @@ public class Currency {
         sb.append(' ');
         sb.append(getName());
         return sb.toString();
+    }
+
+    static Currency getRuble() {
+        Currency rub = new Currency();
+
+        rub.id = "0";
+        rub.numCode = 0;
+        rub.charCode = Constant.CHAR_CODE;
+        rub.name = Constant.NAME;
+        rub.nominal = 1;
+        rub.value = "1";
+
+        return rub;
     }
 }

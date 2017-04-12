@@ -1,8 +1,7 @@
 <resources>
-
-    <!-- margin -->
     <dimen name="margin">30dp</dimen>
-
+    <dimen name="width">30dp</dimen>
+    <dimen name="height">30dp</dimen>
 
     <dimen name="arrow">30dp</dimen>
 </resources>
