@@ -14,7 +14,7 @@ import java.util.List;
 
 import av.sberbank.model.Currencies;
 import av.sberbank.model.Currency;
-import av.sberbank.utils.Constant;
+import av.sberbank.utils.Constants;
 
 /**
  * Created by Artem on 12.04.2017.
@@ -36,9 +36,9 @@ public abstract class FromInternet implements Request {
             public void run() {
                 HttpURLConnection urlConnection = null;
                 try {
-                    URL url = new URL(Constant.CBR_URL);
+                    URL url = new URL(Constants.CBR_URL);
                     urlConnection = (HttpURLConnection) url.openConnection();
-                    urlConnection.setConnectTimeout(Constant.TIMEOUT);
+                    urlConnection.setConnectTimeout(Constants.TIMEOUT);
                     parseXml(urlConnection.getInputStream());
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());

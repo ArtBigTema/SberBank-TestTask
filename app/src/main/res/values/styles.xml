@@ -4,19 +4,13 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:alertDialogTheme">@style/MyDialogStyleLight</item>
+        <item name="actionBarStyle">@style/Toolbar</item>
+        <item name="icon">@mipmap/ic_launcher</item>
+        <item name="buttonStyle">@style/Widget.AppCompat.Button.Colored</item>
     </style>
 
-    <style name="MyDialogStyleLight" parent="Theme.AppCompat.Dialog">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="android:textColor">@color/icon_color</item>
-        <item name="android:textColorSecondary">@color/icon_color</item>
-        <item name="android:textColorAlertDialogListItem">@color/icon_color</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
+    <style name="Toolbar" parent="@style/Widget.AppCompat.Light.ActionBar">
+        <item name="background">?colorPrimary</item>
+        <item name="displayOptions">showHome|showTitle</item>
     </style>
-
 </resources>

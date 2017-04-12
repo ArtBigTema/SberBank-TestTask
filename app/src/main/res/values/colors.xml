@@ -5,5 +5,5 @@
     <color name="colorPrimary">#1ca261</color>
     <color name="colorPrimaryDark">#0c7e46</color>
 
-    <color name="icon_color">#000</color>
+    <color name="icon_color">@color/colorPrimary</color>
 </resources>

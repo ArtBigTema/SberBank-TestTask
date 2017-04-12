@@ -1,10 +1,15 @@
 package av.sberbank;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -13,18 +18,21 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.List;
 
 import av.sberbank.model.Currency;
 import av.sberbank.presenter.Presenter;
 import av.sberbank.presenter.PresenterImpl;
+import av.sberbank.utils.AnimationUtil;
+import av.sberbank.utils.Constants;
 import av.sberbank.utils.NetworkUtils;
 import av.sberbank.view.CurrenciesView;
 import av.sberbank.view.CurrencyAdapter;
 
 public class MainActivity extends AppCompatActivity
-        implements CurrenciesView, DialogInterface.OnClickListener {
+        implements CurrenciesView {
 
     private Button btnStartCurr;
     private Button btnEndCurr;
@@ -68,6 +76,7 @@ public class MainActivity extends AppCompatActivity
         etEndCurr = (EditText) findViewById(R.id.edittext_end_curr);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
 
+        mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.accent));
         mSwipeRefreshLayout.setOnRefreshListener(refreshListener);
         btnStartCurr.setOnClickListener(startCurrClickListener);
         btnEndCurr.setOnClickListener(endCurrClickListener);
@@ -76,22 +85,17 @@ public class MainActivity extends AppCompatActivity
         btnClearCurr.setOnClickListener(clickClear);
 
         etStartCurr.addTextChangedListener(watcherStartCurr);
+        etEndCurr.setOnClickListener(clickToCopy);
     }
 
     private final SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-            if (NetworkUtils.isConnected(MainActivity.this)) {
+            if (NetworkUtils.isConnected(getContextPresenter())) {
                 presenter.refreshData();
             } else {
                 mSwipeRefreshLayout.setRefreshing(false);
-
-                showMessage(R.string.dlg_msg_wifi_settings, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                    }
-                });
+                showMessageConnect();
             }
         }
     };
@@ -99,7 +103,7 @@ public class MainActivity extends AppCompatActivity
     private final View.OnClickListener startCurrClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContextPresenter());
 
             dialogBuilder.setAdapter(adapterStartCurr,
                     new DialogInterface.OnClickListener() {
@@ -119,7 +123,7 @@ public class MainActivity extends AppCompatActivity
     private final View.OnClickListener endCurrClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContextPresenter());
 
             dialogBuilder.setAdapter(adapterEndCurr,
                     new DialogInterface.OnClickListener() {
@@ -140,16 +144,37 @@ public class MainActivity extends AppCompatActivity
     private final View.OnClickListener clickReverse = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            int tmp = adapterStartCurr.getCurrentCurrencyPosition();
-            adapterStartCurr.setCurrentCurrencyPosition(adapterEndCurr.getCurrentCurrencyPosition());
-            adapterEndCurr.setCurrentCurrencyPosition(tmp);
+            AnimationUtil.animateReverse(getContextPresenter(),
+                    btnReverseCurr, btnStartCurr, btnEndCurr,
+                    etStartCurr, etEndCurr);
 
-            btnEndCurr.setText(adapterEndCurr.getSelectedItem().getCharCode());
-            btnStartCurr.setText(adapterStartCurr.getSelectedItem().getCharCode());
-
-            calculate();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    reverseView();
+                    calculate();
+                }
+            }, getResources().getInteger(R.integer.duration_long));
         }
     };
+    private final View.OnClickListener clickToCopy = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ClipboardManager clipMan = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            clipMan.setPrimaryClip(ClipData.newPlainText(Constants.NAME, etEndCurr.getText()));
+            Snackbar.make(v, R.string.toast_click_to_copy, Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    private void reverseView() {
+        int tmp = adapterStartCurr.getCurrentCurrencyPosition();
+        adapterStartCurr.setCurrentCurrencyPosition(adapterEndCurr.getCurrentCurrencyPosition());
+        adapterEndCurr.setCurrentCurrencyPosition(tmp);
+
+        // etStartCurr.setText(etEndCurr.getText()); //fixme
+        btnEndCurr.setText(adapterEndCurr.getSelectedItem().getCharCode());
+        btnStartCurr.setText(adapterStartCurr.getSelectedItem().getCharCode());
+    }
 
     private final TextWatcher watcherStartCurr = new TextWatcher() {
         @Override
@@ -180,13 +205,29 @@ public class MainActivity extends AppCompatActivity
     private final View.OnClickListener clickClear = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            resetView();
+            AnimationUtil.animateClear(getContextPresenter(),
+                    btnStartCurr, btnEndCurr, etStartCurr, etEndCurr);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    resetView();
+                }
+            }, getResources().getInteger(R.integer.duration_long));
         }
     };
 
     @Override
     public void showListCurrencies(List<Currency> currencies) {
         mSwipeRefreshLayout.setRefreshing(false);
+
+        if (currencies.size() < 1) {
+            showMessageConnect();
+            return;
+        } else {
+            Snackbar.make(mSwipeRefreshLayout,
+                    R.string.toast_finish_downloading, Toast.LENGTH_SHORT).show();
+        }
 
         adapterStartCurr.addAll(currencies);
         adapterEndCurr.addAll(currencies);
@@ -195,8 +236,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void resetView() {
-        adapterStartCurr.setCurrentCurrencyPosition(0);//fixme 0
-        adapterEndCurr.setCurrentCurrencyPosition(0);//fixme 0
+        adapterStartCurr.setCurrentCurrencyPosition(0);
+        adapterEndCurr.setCurrentCurrencyPosition(0);
 
         btnStartCurr.setText(adapterStartCurr.getSelectedItem().getCharCode());
         btnEndCurr.setText(adapterEndCurr.getSelectedItem().getCharCode());
@@ -215,19 +256,19 @@ public class MainActivity extends AppCompatActivity
         return this;
     }
 
-    public void showMessage(int msg, DialogInterface.OnClickListener listener) {
-        showMessage(getString(msg), listener);
+    public void showMessageConnect() {
+        showMessage(R.string.dlg_msg_wifi_settings, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+            }
+        });
     }
 
-    public void showMessage(String msg, DialogInterface.OnClickListener listener) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+    public void showMessage(int msg, DialogInterface.OnClickListener listener) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContextPresenter());
         dialogBuilder.setMessage(msg);
         dialogBuilder.setPositiveButton(android.R.string.ok, listener);
         dialogBuilder.show();
-    }
-
-    @Override
-    public void onClick(DialogInterface dialog, int which) {
-
     }
 }

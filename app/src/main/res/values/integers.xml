@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="max_length">6</integer>
+    <integer name="duration">300</integer>
+    <integer name="duration_long">600</integer>
 </resources>

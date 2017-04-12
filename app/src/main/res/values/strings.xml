@@ -2,5 +2,9 @@
     <string name="app_name">SberBank TestTask</string>
 
     <string name="currency_sum">1</string>
-    <string name="dlg_msg_wifi_settings">Первый запуск приложения требует интернет соединения \r\nПерейти в настройки wi-fi</string>
+
+    <string name="toast_click_to_copy">Текст скопирован в буфер</string>
+    <string name="toast_finish_downloading">Данные успешно обновлены</string>
+    <string name="toast_error_downloading">Что-то пошло не так, попробуйте позже</string>
+    <string name="dlg_msg_wifi_settings">Требуется интернет соединения \r\nПерейти в настройки wi-fi?</string>
 </resources>

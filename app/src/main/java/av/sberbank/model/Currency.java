@@ -8,7 +8,7 @@ import av.sberbank.model.db.DBColumn;
 import av.sberbank.model.db.DBColumnType;
 import av.sberbank.model.db.DBTable;
 import av.sberbank.model.db.Key;
-import av.sberbank.utils.Constant;
+import av.sberbank.utils.Constants;
 
 /**
  * Created by Artem on 12.04.2017.
@@ -71,13 +71,13 @@ public class Currency {
         return sb.toString();
     }
 
-    static Currency getRuble() {
+    public static Currency getRuble() {
         Currency rub = new Currency();
 
         rub.id = "0";
         rub.numCode = 0;
-        rub.charCode = Constant.CHAR_CODE;
-        rub.name = Constant.NAME;
+        rub.charCode = Constants.CHAR_CODE;
+        rub.name = Constants.NAME;
         rub.nominal = 1;
         rub.value = "1";
 
