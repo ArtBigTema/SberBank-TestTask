@@ -1,8 +1,6 @@
 package av.sberbank;
 
-import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -49,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private final SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-            if (NetworkUtils.isNetworkAvailable(MainActivity.this)) {
+            if (NetworkUtils.isConnected(MainActivity.this)) {
                 // download
             } else {
                 // show msg

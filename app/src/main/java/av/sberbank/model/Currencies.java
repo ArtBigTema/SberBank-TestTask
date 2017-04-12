@@ -21,4 +21,8 @@ public class Currencies {
 
     @ElementList(inline = true)
     private List<Currency> currencies = new ArrayList<>();
+
+    public List<Currency> getCurrencies() {
+        return currencies;
+    }
 }

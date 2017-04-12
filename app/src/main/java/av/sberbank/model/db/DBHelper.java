@@ -1,5 +1,6 @@
 package av.sberbank.model.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,6 +29,22 @@ public class DBHelper extends SQLiteOpenHelper {
         for (Class clazz : tables) {
             String sqlCreateTable = Table.create(clazz);
             db.execSQL(sqlCreateTable);
+        }
+    }
+
+    public <T> void addAll(List<T> items, Class clazz) {
+        SQLiteDatabase database = getWritableDatabase();
+        DBTable table = (DBTable) clazz.getAnnotation(DBTable.class);
+        String tableName = table.name();
+        if (tableExist(database, tableName)) {
+            try {
+                for (T item : items) {
+                    ContentValues contentValues = Table.insert(clazz, item);
+                    database.insert(tableName, null, contentValues);
+                }
+            } finally {
+                close();
+            }
         }
     }
 

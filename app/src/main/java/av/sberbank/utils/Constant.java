@@ -6,5 +6,6 @@ package av.sberbank.utils;
 
 public class Constant {
     public static final String CBR_URL = "http://www.cbr.ru/scripts/XML_daily.asp";
+    public static final int TIMEOUT = 4 * 1000;
 
 }
