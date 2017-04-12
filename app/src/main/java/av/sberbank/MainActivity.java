@@ -18,7 +18,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -95,7 +94,7 @@ public class MainActivity extends AppCompatActivity
                 presenter.refreshData();
             } else {
                 mSwipeRefreshLayout.setRefreshing(false);
-                showMessageConnect();
+                showMessageConnect(false);
             }
         }
     };
@@ -162,7 +161,7 @@ public class MainActivity extends AppCompatActivity
         public void onClick(View v) {
             ClipboardManager clipMan = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             clipMan.setPrimaryClip(ClipData.newPlainText(Constants.NAME, etEndCurr.getText()));
-            Snackbar.make(v, R.string.toast_click_to_copy, Toast.LENGTH_SHORT).show();
+            Snackbar.make(v, R.string.toast_click_to_copy, Snackbar.LENGTH_SHORT).show();
         }
     };
 
@@ -221,12 +220,11 @@ public class MainActivity extends AppCompatActivity
     public void showListCurrencies(List<Currency> currencies) {
         mSwipeRefreshLayout.setRefreshing(false);
 
-        if (currencies.size() < 1) {
-            showMessageConnect();
-            return;
+        if (currencies.size() < 2) {
+            showMessageConnect(true);
         } else {
             Snackbar.make(mSwipeRefreshLayout,
-                    R.string.toast_finish_downloading, Toast.LENGTH_SHORT).show();
+                    R.string.toast_finish_downloading, Snackbar.LENGTH_SHORT).show();
         }
 
         adapterStartCurr.addAll(currencies);
@@ -256,8 +254,10 @@ public class MainActivity extends AppCompatActivity
         return this;
     }
 
-    public void showMessageConnect() {
-        showMessage(R.string.dlg_msg_wifi_settings, new DialogInterface.OnClickListener() {
+    public void showMessageConnect(boolean isFirstRun) {
+        int text = isFirstRun ? R.string.dlg_msg_first_run : R.string.dlg_msg_wifi_settings;
+
+        showMessage(text, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));

@@ -28,6 +28,11 @@ public abstract class FromCache implements Request {
             @Override
             public void run() {
                 List<Currency> currencies = dbHelper.getAll(Currency.class);
+
+                if (currencies.size() < 1) {
+                    currencies = Collections.singletonList(Currency.getRuble());
+                }//fixme if empty put Ruble
+
                 notifyDataReceived(currencies);
             }
         }).run();
