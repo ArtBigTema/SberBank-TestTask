@@ -1,0 +1,8 @@
+<resources>
+
+    <!-- margin -->
+    <dimen name="margin">30dp</dimen>
+
+
+    <dimen name="arrow">30dp</dimen>
+</resources>
