@@ -1,5 +1,7 @@
 <resources>
     <dimen name="margin">30dp</dimen>
+    <dimen name="padding">30dp</dimen>
+    <dimen name="margin_small">20dp</dimen>
     <dimen name="width">30dp</dimen>
     <dimen name="height">30dp</dimen>
 
